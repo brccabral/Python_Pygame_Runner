@@ -17,6 +17,9 @@ snail_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_al
 snail_x_pos = SCREEN_WIDTH-100
 snail_x_speed = 4
 
+player_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+player_rect = player_surface.get_rect(midbottom = (50,sky_surface.get_height()))
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -26,6 +29,7 @@ while True:
     screen.blit(sky_surface,(0,0))
     screen.blit(ground_surface,(0,sky_surface.get_height()))
     screen.blit(snail_surface,(snail_x_pos,sky_surface.get_height()-snail_surface.get_height()))
+    screen.blit(player_surface,player_rect)
 
     snail_x_pos -= snail_x_speed
     if snail_x_pos < -snail_surface.get_width():
