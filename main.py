@@ -5,6 +5,8 @@ pygame.init()
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 400
+GRAY_TEXT = (64,64,64)
+BLUE_SHADOW = '#c0e8ec'
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
@@ -22,7 +24,7 @@ player_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').c
 player_rect = player_surface.get_rect(midbottom = (50,sky_surface.get_height()))
 
 score = 0
-score_surface = text_font.render(f'Score: {score}', False, 'Black')
+score_surface = text_font.render(f'Score: {score}', False, GRAY_TEXT)
 score_rect = score_surface.get_rect(center = (SCREEN_WIDTH//2, 50))
 
 while True:
@@ -37,6 +39,8 @@ while True:
     screen.blit(ground_surface,(0,sky_surface.get_height()))
     screen.blit(snail_surface,snail_rect)
     screen.blit(player_surface,player_rect)
+    pygame.draw.rect(screen,BLUE_SHADOW,score_rect)
+    pygame.draw.rect(screen,BLUE_SHADOW,score_rect,6)
     screen.blit(score_surface, score_rect)
 
     snail_rect.x -= snail_x_speed
