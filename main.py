@@ -12,22 +12,23 @@ class Player(pygame.sprite.Sprite):
         self.player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
         self.player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
         self.image = self.player_walk_surfaces[self.index_surface]
-        self.rect = self.image.get_rect(midbottom = (200,300))
+        self.rect = self.image.get_rect(midbottom = (80,ground_rect.top))
         self.gravity = 0
+        self.y_jump = 20
 
     def player_input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
-            self.gravity = -20
+        if keys[pygame.K_SPACE] and self.rect.bottom >= ground_rect.top:
+            self.gravity = -self.y_jump
 
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= 300:
-            self.rect.bottom = 300
+        if self.rect.bottom >= ground_rect.top:
+            self.rect.bottom = ground_rect.top
 
     def animation_state(self):
-        if self.rect.bottom < 300:
+        if self.rect.bottom < ground_rect.top:
             self.image = self.player_jump_surface
         else:
             self.index_surface += 0.1
@@ -48,12 +49,14 @@ class Enemy(pygame.sprite.Sprite):
             fly_frame2_surface = pygame.image.load('assets/graphics/Fly/Fly2.png').convert_alpha()
             self.frames = [fly_frame1_surface, fly_frame2_surface]
             self.x_speed = 8
+            self.animation_speed = 0.3
             self.y_pos = ground_rect.top - 90
         else:
             snail_frame1_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_alpha()
             snail_frame2_surface = pygame.image.load('assets/graphics/snail/snail2.png').convert_alpha()
             self.frames = [snail_frame1_surface, snail_frame2_surface]
             self.x_speed = 6
+            self.animation_speed = 0.1
             self.y_pos = ground_rect.top
         
         self.index_surface = 0
@@ -61,7 +64,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(bottomleft = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300),self.y_pos))
     
     def animation_state(self):
-        self.index_surface += 0.1
+        self.index_surface += self.animation_speed
         if self.index_surface >= len(self.frames):
             self.index_surface = 0
         self.image = self.frames[int(self.index_surface)]
