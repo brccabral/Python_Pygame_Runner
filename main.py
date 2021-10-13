@@ -14,10 +14,13 @@ def display_score():
 def obstacle_movement(obstacle_rect_list):
     if obstacle_rect_list:
         for obs_rect in obstacle_rect_list:
-            obs_rect.x -= snail_x_speed
+            if obs_rect.bottom < ground_rect.top:
+                obs_rect.x -= fly_x_speed
+                screen.blit(fly_surface, obs_rect)
+            else:
+                obs_rect.x -= snail_x_speed
+                screen.blit(snail_surface, obs_rect)
 
-            screen.blit(snail_surface, obs_rect)
-        
         obstacle_rect_list = [obs_rect for obs_rect in obstacle_rect_list if obs_rect.right > -10]
 
     return obstacle_rect_list
@@ -47,7 +50,11 @@ obstacle_rect_list = []
 
 snail_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_alpha()
 snail_x_speed = 6
-snail_rect = snail_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,sky_surface.get_height()))
+snail_rect = snail_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top))
+
+fly_surface = pygame.image.load('assets/graphics/Fly/Fly1.png').convert_alpha()
+fly_x_speed = 8
+fly_rect = fly_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top+50))
 
 
 # Player
@@ -85,7 +92,10 @@ while True:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
                     player_y_pos = -player_jump_y
             if event.type == obstacle_timer:
-                obstacle_rect_list.append(snail_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top)))
+                if randint(0,2):
+                    obstacle_rect_list.append(snail_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top)))
+                else:
+                    obstacle_rect_list.append(fly_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top-50)))
         else:
             if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 snail_rect.left = SCREEN_WIDTH+10
