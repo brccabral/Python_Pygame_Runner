@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+from random import randint
 
 def display_score():
     current_time = pygame.time.get_ticks()//1000 - start_time
@@ -10,6 +11,13 @@ def display_score():
     screen.blit(score_surface, score_rect)
     return current_time
 
+def obstacle_movement(obstacle_rect_list):
+    if obstacle_rect_list:
+        for obs_rect in obstacle_rect_list:
+            obs_rect.x -= snail_x_speed
+
+            screen.blit(snail_surface, obs_rect)
+    return obstacle_rect_list
 
 pygame.init()
 
@@ -31,10 +39,15 @@ sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
 ground_rect = ground_surface.get_rect(topleft = (0,sky_surface.get_height()))
 
+# Enemies
+obstacle_rect_list = []
+
 snail_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_alpha()
 snail_x_speed = 6
 snail_rect = snail_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,sky_surface.get_height()))
 
+
+# Player
 player_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surface.get_rect(midbottom = (50,sky_surface.get_height()))
 player_jump_y = 20
@@ -52,6 +65,10 @@ game_name_rect = game_name.get_rect(center = (player_stand_rect.centerx, player_
 game_message  = text_font.render('Press space or click to start', False, GREEN_SHADOW)
 game_message_rect = game_message.get_rect(center = (player_stand_rect.centerx, player_stand_rect.bottom + 30))
 
+# Timers
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer, 900)
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -64,6 +81,8 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
                     player_y_pos = -player_jump_y
+            if event.type == obstacle_timer:
+                obstacle_rect_list.append(snail_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top)))
         else:
             if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 snail_rect.left = SCREEN_WIDTH+10
@@ -73,12 +92,15 @@ while True:
     if game_active:
         screen.blit(sky_surface,(0,0))
         screen.blit(ground_surface,ground_rect)
-        screen.blit(snail_surface,snail_rect)
         score = display_score()
 
-        snail_rect.x -= snail_x_speed
-        if snail_rect.right < 0:
-            snail_rect.left = SCREEN_WIDTH+10
+        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+
+        # screen.blit(snail_surface,snail_rect)
+
+        # snail_rect.x -= snail_x_speed
+        # if snail_rect.right < 0:
+        #     snail_rect.left = SCREEN_WIDTH+10
 
         # increases every loop to give gravity feels of acceleration
         player_y_pos += player_gravity
