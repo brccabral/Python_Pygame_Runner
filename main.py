@@ -8,6 +8,7 @@ def display_score():
     pygame.draw.rect(screen,BLUE_SHADOW,score_rect)
     pygame.draw.rect(screen,BLUE_SHADOW,score_rect,6)
     screen.blit(score_surface, score_rect)
+    return current_time
 
 
 pygame.init()
@@ -22,8 +23,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 text_font = pygame.font.Font('assets/font/Pixeltype.ttf', 50)
-game_active = True
+game_active = False
 start_time = 0
+score = 0
 
 sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
@@ -72,7 +74,7 @@ while True:
         screen.blit(sky_surface,(0,0))
         screen.blit(ground_surface,ground_rect)
         screen.blit(snail_surface,snail_rect)
-        display_score()
+        score = display_score()
 
         snail_rect.x -= snail_x_speed
         if snail_rect.right < 0:
@@ -91,7 +93,12 @@ while True:
         screen.fill(BLUE_SHADOW)
         screen.blit(player_stand,player_stand_rect)
         screen.blit(game_name, game_name_rect)
-        screen.blit(game_message, game_message_rect)
+        if score == 0:
+            screen.blit(game_message, game_message_rect)
+        else:
+            score_message = text_font.render(f'Your score: {score}', False, GREEN_SHADOW)
+            score_message_rect = score_message.get_rect(center = (SCREEN_WIDTH//2, player_stand_rect.bottom + 30))
+            screen.blit(score_message, score_message_rect)
 
     
     pygame.display.update()
