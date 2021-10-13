@@ -38,6 +38,11 @@ player_jump_y = 20
 player_y_pos = 0
 player_gravity = 1
 
+# Game over player
+player_stand = pygame.image.load('assets/graphics/Player/player_stand.png').convert_alpha()
+player_stand = pygame.transform.rotozoom(player_stand, 0, 2.5)
+player_stand_rect = player_stand.get_rect(center = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
+
 
 while True:
     for event in pygame.event.get():
@@ -78,6 +83,7 @@ while True:
             game_active = False
     else:
         screen.fill(BLUE_SHADOW)
+        screen.blit(player_stand,player_stand_rect)
 
     
     pygame.display.update()
