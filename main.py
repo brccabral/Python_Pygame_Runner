@@ -6,7 +6,12 @@ from typing import List
 class Player(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
-        self.image: pygame.Surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+        player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+        player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
+        self.player_index_surface = 0
+        self.player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
+        self.player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
+        self.image = self.player_walk_surfaces[self.player_index_surface]
         self.rect = self.image.get_rect(midbottom = (200,300))
         self.gravity = 0
     def player_input(self):
@@ -18,9 +23,19 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.gravity
         if self.rect.bottom >= 300:
             self.rect.bottom = 300
+    def animation_state(self):
+        if self.rect.bottom < 300:
+            self.image = self.player_jump_surface
+        else:
+            self.player_index_surface += 0.1
+            if self.player_index_surface >= len(self.player_walk_surfaces):
+                self.player_index_surface = 0
+            self.image = self.player_walk_surfaces[int(self.player_index_surface)]
+
     def update(self):
         self.player_input()
         self.apply_gravity()
+        self.animation_state()
 
 
 def display_score():
