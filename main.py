@@ -8,10 +8,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
         player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
-        self.player_index_surface = 0
+        self.index_surface = 0
         self.player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
         self.player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
-        self.image = self.player_walk_surfaces[self.player_index_surface]
+        self.image = self.player_walk_surfaces[self.index_surface]
         self.rect = self.image.get_rect(midbottom = (200,300))
         self.gravity = 0
 
@@ -30,10 +30,10 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom < 300:
             self.image = self.player_jump_surface
         else:
-            self.player_index_surface += 0.1
-            if self.player_index_surface >= len(self.player_walk_surfaces):
-                self.player_index_surface = 0
-            self.image = self.player_walk_surfaces[int(self.player_index_surface)]
+            self.index_surface += 0.1
+            if self.index_surface >= len(self.player_walk_surfaces):
+                self.index_surface = 0
+            self.image = self.player_walk_surfaces[int(self.index_surface)]
 
     def update(self):
         self.player_input()
@@ -60,7 +60,16 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.frames[self.index_surface]
         self.rect = self.image.get_rect(bottomleft = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300),self.y_pos))
     
+    def animation_state(self):
+        self.index_surface += 0.1
+        if self.index_surface >= len(self.frames):
+            self.index_surface = 0
+        self.image = self.frames[int(self.index_surface)]
     
+    def update(self):
+        self.animation_state()
+        self.rect.x -= self.x_speed
+
 
 def display_score():
     current_time = pygame.time.get_ticks()//1000 - start_time
@@ -155,6 +164,7 @@ fly_surface = fly_frames[fly_index_surface]
 fly_x_speed = 8
 fly_rect = fly_frame1_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top-player_surface.get_height()-10))
 
+enemies_group = pygame.sprite.Group()
 
 # Game over player
 player_stand = pygame.image.load('assets/graphics/Player/player_stand.png').convert_alpha()
@@ -188,6 +198,7 @@ while True:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
                     player_y_pos = -player_jump_y
             if event.type == obstacle_timer:
+                enemies_group.add(Enemy('fly'))
                 if randint(0,2):
                     obstacle_rect_list.append(snail_frame1_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top)))
                 else:
@@ -225,6 +236,9 @@ while True:
         player_animation()
         player.update()
         player.draw(screen)
+
+        enemies_group.draw(screen)
+        enemies_group.update()
 
         game_active = collisions(player_rect, obstacle_rect_list)
     else:
