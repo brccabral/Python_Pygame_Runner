@@ -16,6 +16,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 400
 GRAY_TEXT = (64,64,64)
 BLUE_SHADOW = '#c0e8ec'
+GREEN_SHADOW = (111,196,169)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
@@ -43,6 +44,8 @@ player_stand = pygame.image.load('assets/graphics/Player/player_stand.png').conv
 player_stand = pygame.transform.rotozoom(player_stand, 0, 2.5)
 player_stand_rect = player_stand.get_rect(center = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
 
+game_name = text_font.render('Runner', False, GREEN_SHADOW)
+game_name_rect = game_name.get_rect(center = (player_stand_rect.centerx, player_stand_rect.top - 20))
 
 while True:
     for event in pygame.event.get():
@@ -84,6 +87,7 @@ while True:
     else:
         screen.fill(BLUE_SHADOW)
         screen.blit(player_stand,player_stand_rect)
+        screen.blit(game_name, game_name_rect)
 
     
     pygame.display.update()
