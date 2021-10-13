@@ -32,6 +32,16 @@ def collisions(player: pygame.Rect, obstacles: List[pygame.Rect]):
             return not player.colliderect(obs_rec)
     return True
 
+def player_animation():
+    global player_surface, player_index_surface
+    if player_rect.bottom < ground_rect.top:
+        player_surface = player_jump_surface
+    else:
+        player_index_surface += 0.1
+        if player_index_surface >= len(player_walk_surfaces): player_index_surface = 0
+        player_surface = player_walk_surfaces[int(player_index_surface)]
+    screen.blit(player_surface, player_rect)
+
 pygame.init()
 
 SCREEN_WIDTH = 800
@@ -65,8 +75,13 @@ fly_rect = fly_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top+5
 
 
 # Player
-player_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
-player_rect = player_surface.get_rect(midbottom = (50,sky_surface.get_height()))
+player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
+player_index_surface = 0
+player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
+player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
+player_surface = player_walk_surfaces[player_index_surface]
+player_rect = player_walk1_surface.get_rect(midbottom = (50,ground_rect.top))
 player_jump_y = 20
 player_y_pos = 0
 player_gravity = 1
@@ -129,7 +144,8 @@ while True:
         player_rect.bottom += player_y_pos
         if player_rect.bottom >= ground_rect.top:
             player_rect.bottom = ground_rect.top
-        screen.blit(player_surface,player_rect)
+        # screen.blit(player_walk1_surface,player_rect)
+        player_animation()
 
         game_active = collisions(player_rect, obstacle_rect_list)
     else:
