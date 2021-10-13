@@ -12,6 +12,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 text_font = pygame.font.Font('assets/font/Pixeltype.ttf', 50)
+game_active = True
 
 sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
@@ -36,33 +37,41 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if player_rect.collidepoint(event.pos):
-                player_y_pos = -player_jump_y
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
-                player_y_pos = -player_jump_y
+        if game_active:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if player_rect.collidepoint(event.pos):
+                    player_y_pos = -player_jump_y
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
+                    player_y_pos = -player_jump_y
+        else:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                snail_rect.left = SCREEN_WIDTH+10
+                game_active = True
     
-    screen.blit(sky_surface,(0,0))
-    screen.blit(ground_surface,ground_rect)
-    screen.blit(snail_surface,snail_rect)
-    pygame.draw.rect(screen,BLUE_SHADOW,score_rect)
-    pygame.draw.rect(screen,BLUE_SHADOW,score_rect,6)
-    screen.blit(score_surface, score_rect)
+    if game_active:
+        screen.blit(sky_surface,(0,0))
+        screen.blit(ground_surface,ground_rect)
+        screen.blit(snail_surface,snail_rect)
+        pygame.draw.rect(screen,BLUE_SHADOW,score_rect)
+        pygame.draw.rect(screen,BLUE_SHADOW,score_rect,6)
+        screen.blit(score_surface, score_rect)
 
-    snail_rect.x -= snail_x_speed
-    if snail_rect.x < -snail_surface.get_width():
-        snail_rect.x = SCREEN_WIDTH+10
+        snail_rect.x -= snail_x_speed
+        if snail_rect.right < 0:
+            snail_rect.left = SCREEN_WIDTH+10
 
-    # increases every loop to give gravity feels of acceleration
-    player_y_pos += player_gravity
-    player_rect.bottom += player_y_pos
-    if player_rect.bottom >= ground_rect.top:
-        player_rect.bottom = ground_rect.top
-    screen.blit(player_surface,player_rect)
+        # increases every loop to give gravity feels of acceleration
+        player_y_pos += player_gravity
+        player_rect.bottom += player_y_pos
+        if player_rect.bottom >= ground_rect.top:
+            player_rect.bottom = ground_rect.top
+        screen.blit(player_surface,player_rect)
 
-    if player_rect.colliderect(snail_rect):
-        print('collision')
+        if player_rect.colliderect(snail_rect):
+            game_active = False
+    else:
+        screen.fill(BLUE_SHADOW)
 
     pygame.display.update()
     clock.tick(60)
