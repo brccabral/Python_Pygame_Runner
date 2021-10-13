@@ -45,7 +45,7 @@ while True:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
                     player_y_pos = -player_jump_y
         else:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 snail_rect.left = SCREEN_WIDTH+10
                 game_active = True
     
