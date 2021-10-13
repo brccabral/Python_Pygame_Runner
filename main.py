@@ -8,6 +8,20 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image: pygame.Surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom = (200,300))
+        self.gravity = 0
+    def player_input(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+            self.gravity = -20
+    def apply_gravity(self):
+        self.gravity += 1
+        self.rect.y += self.gravity
+        if self.rect.bottom >= 300:
+            self.rect.bottom = 300
+    def update(self):
+        self.player_input()
+        self.apply_gravity()
+
 
 def display_score():
     current_time = pygame.time.get_ticks()//1000 - start_time
@@ -170,6 +184,7 @@ while True:
         if player_rect.bottom >= ground_rect.top:
             player_rect.bottom = ground_rect.top
         player_animation()
+        player.update()
         player.draw(screen)
 
         game_active = collisions(player_rect, obstacle_rect_list)
