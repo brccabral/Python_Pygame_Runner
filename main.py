@@ -17,6 +17,9 @@ def obstacle_movement(obstacle_rect_list):
             obs_rect.x -= snail_x_speed
 
             screen.blit(snail_surface, obs_rect)
+        
+        obstacle_rect_list = [obs_rect for obs_rect in obstacle_rect_list if obs_rect.right > -10]
+
     return obstacle_rect_list
 
 pygame.init()
