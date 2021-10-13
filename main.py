@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from random import randint
+from typing import List
 
 def display_score():
     current_time = pygame.time.get_ticks()//1000 - start_time
@@ -11,7 +12,7 @@ def display_score():
     screen.blit(score_surface, score_rect)
     return current_time
 
-def obstacle_movement(obstacle_rect_list):
+def obstacle_movement(obstacle_rect_list: List[pygame.Rect]):
     if obstacle_rect_list:
         for obs_rect in obstacle_rect_list:
             if obs_rect.bottom < ground_rect.top:
@@ -24,6 +25,12 @@ def obstacle_movement(obstacle_rect_list):
         obstacle_rect_list = [obs_rect for obs_rect in obstacle_rect_list if obs_rect.right > -10]
 
     return obstacle_rect_list
+
+def collisions(player: pygame.Rect, obstacles: List[pygame.Rect]):
+    if obstacles:
+        for obs_rec in obstacles:
+            return not player.colliderect(obs_rec)
+    return True
 
 pygame.init()
 
@@ -98,7 +105,9 @@ while True:
                     obstacle_rect_list.append(fly_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top-50)))
         else:
             if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
-                snail_rect.left = SCREEN_WIDTH+10
+                obstacle_rect_list.clear()
+                player_rect.bottom = ground_rect.top
+                player_y_pos = 0
                 start_time = pygame.time.get_ticks()//1000
                 game_active = True
     
@@ -122,8 +131,7 @@ while True:
             player_rect.bottom = ground_rect.top
         screen.blit(player_surface,player_rect)
 
-        if player_rect.colliderect(snail_rect):
-            game_active = False
+        game_active = collisions(player_rect, obstacle_rect_list)
     else:
         screen.fill(BLUE_SHADOW)
         screen.blit(player_stand,player_stand_rect)
