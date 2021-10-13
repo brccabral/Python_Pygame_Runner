@@ -3,6 +3,12 @@ from sys import exit
 from random import randint
 from typing import List
 
+class Player(pygame.sprite.Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.image: pygame.Surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+        self.rect = self.image.get_rect(midbottom = (200,300))
+
 def display_score():
     current_time = pygame.time.get_ticks()//1000 - start_time
     score_surface = text_font.render(f'Score: {current_time}', False, GRAY_TEXT)
@@ -73,6 +79,9 @@ player_rect = player_walk1_surface.get_rect(midbottom = (50,ground_rect.top))
 player_jump_y = 20
 player_y_pos = 0
 player_gravity = 1
+
+player = pygame.sprite.GroupSingle()
+player.add(Player())
 
 # Enemies
 obstacle_rect_list = []
@@ -161,6 +170,7 @@ while True:
         if player_rect.bottom >= ground_rect.top:
             player_rect.bottom = ground_rect.top
         player_animation()
+        player.draw(screen)
 
         game_active = collisions(player_rect, obstacle_rect_list)
     else:
