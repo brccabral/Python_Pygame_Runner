@@ -62,6 +62,18 @@ sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
 ground_rect = ground_surface.get_rect(topleft = (0,sky_surface.get_height()))
 
+# Player
+player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
+player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
+player_index_surface = 0
+player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
+player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
+player_surface = player_walk_surfaces[player_index_surface]
+player_rect = player_walk1_surface.get_rect(midbottom = (50,ground_rect.top))
+player_jump_y = 20
+player_y_pos = 0
+player_gravity = 1
+
 # Enemies
 obstacle_rect_list = []
 
@@ -79,20 +91,8 @@ fly_frames = [fly_frame1_surface, fly_frame2_surface]
 fly_index_surface = 0
 fly_surface = fly_frames[fly_index_surface]
 fly_x_speed = 8
-fly_rect = fly_frame1_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top+50))
+fly_rect = fly_frame1_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,ground_rect.top-player_surface.get_height()-10))
 
-
-# Player
-player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
-player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
-player_index_surface = 0
-player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
-player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
-player_surface = player_walk_surfaces[player_index_surface]
-player_rect = player_walk1_surface.get_rect(midbottom = (50,ground_rect.top))
-player_jump_y = 20
-player_y_pos = 0
-player_gravity = 1
 
 # Game over player
 player_stand = pygame.image.load('assets/graphics/Player/player_stand.png').convert_alpha()
@@ -129,7 +129,7 @@ while True:
                 if randint(0,2):
                     obstacle_rect_list.append(snail_frame1_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top)))
                 else:
-                    obstacle_rect_list.append(fly_frame1_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top-50)))
+                    obstacle_rect_list.append(fly_frame1_surface.get_rect(bottomright = (randint(SCREEN_WIDTH+100, SCREEN_WIDTH + 300), ground_rect.top-player_surface.get_height()-10)))
             if event.type == snail_animation_timer:
                 snail_index_surface = (snail_index_surface+1)%2
             if event.type == fly_animation_timer:
