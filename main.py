@@ -18,7 +18,7 @@ ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
 ground_rect = ground_surface.get_rect(topleft = (0,sky_surface.get_height()))
 
 snail_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_alpha()
-snail_x_speed = 4
+snail_x_speed = 6
 snail_rect = snail_surface.get_rect(bottomleft = (SCREEN_WIDTH-100,sky_surface.get_height()))
 
 player_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
@@ -40,7 +40,7 @@ while True:
             if player_rect.collidepoint(event.pos):
                 player_y_pos = -player_jump_y
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and player_rect.bottom >= ground_rect.top:
                 player_y_pos = -player_jump_y
     
     screen.blit(sky_surface,(0,0))
