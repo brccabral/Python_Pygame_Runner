@@ -47,6 +47,9 @@ player_stand_rect = player_stand.get_rect(center = (SCREEN_WIDTH//2, SCREEN_HEIG
 game_name = text_font.render('Runner', False, GREEN_SHADOW)
 game_name_rect = game_name.get_rect(center = (player_stand_rect.centerx, player_stand_rect.top - 20))
 
+game_message  = text_font.render('Press space or click to start', False, GREEN_SHADOW)
+game_message_rect = game_message.get_rect(center = (player_stand_rect.centerx, player_stand_rect.bottom + 30))
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -88,6 +91,7 @@ while True:
         screen.fill(BLUE_SHADOW)
         screen.blit(player_stand,player_stand_rect)
         screen.blit(game_name, game_name_rect)
+        screen.blit(game_message, game_message_rect)
 
     
     pygame.display.update()
