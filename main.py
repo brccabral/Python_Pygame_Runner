@@ -21,6 +21,10 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.rect.bottom >= ground_rect.top:
             self.gravity = -self.y_jump
 
+    def reset_pos(self):
+        self.gravity = 0
+        self.rect.bottom = ground_rect.top
+
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
@@ -88,10 +92,10 @@ def display_score():
     screen.blit(score_surface, score_rect)
     return current_time
 
-def collisions(player: pygame.Rect, obstacles: List[pygame.Rect]):
-    if obstacles:
-        for obs_rec in obstacles:
-            return not player.colliderect(obs_rec)
+def collisions_sprite():
+    if pygame.sprite.spritecollide(player.sprite, enemies_group, False):
+        enemies_group.empty()
+        return False
     return True
 
 pygame.init()
@@ -148,6 +152,8 @@ while True:
         else:
             if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE):
                 start_time = pygame.time.get_ticks()//1000
+                playersprite: Player = player.sprites()[0]
+                playersprite.reset_pos()
                 game_active = True
     
     if game_active:
@@ -161,7 +167,7 @@ while True:
         enemies_group.draw(screen)
         enemies_group.update()
 
-        # game_active = collisions(player_rect, obstacle_rect_list)
+        game_active = collisions_sprite()
     else:
         screen.fill(BLUE_SHADOW)
         screen.blit(player_stand,player_stand_rect)
