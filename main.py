@@ -16,10 +16,14 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0
         self.y_jump = 20
 
+        self.jump_sound = pygame.mixer.Sound('assets/audio/jump.mp3')
+        self.jump_sound.set_volume(0.5)
+
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= ground_rect.top:
             self.gravity = -self.y_jump
+            self.jump_sound.play()
 
     def reset_pos(self):
         self.gravity = 0
@@ -113,6 +117,9 @@ text_font = pygame.font.Font('assets/font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
+background_music = pygame.mixer.Sound('assets/audio/music.wav')
+background_music.set_volume(0.5)
+background_music.play(loops = -1)
 
 sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
