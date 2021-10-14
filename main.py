@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from random import randint, choice
+import os
 
 class Player(pygame.sprite.Sprite):
     def __init__(self) -> None:
@@ -112,16 +113,16 @@ GREEN_SHADOW = (111,196,169)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
-text_font = pygame.font.Font('assets/font/Pixeltype.ttf', 50)
+text_font = pygame.font.Font(os.path.join('assets','font','Pixeltype.ttf'), 50)
 game_active = False
 start_time = 0
 score = 0
-background_music = pygame.mixer.Sound('assets/audio/music.wav')
+background_music = pygame.mixer.Sound(os.path.join('assets','audio','music.wav'))
 background_music.set_volume(0.5)
 background_music.play(loops = -1)
 
-sky_surface = pygame.image.load('assets/graphics/Sky.png').convert()
-ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
+sky_surface = pygame.image.load(os.path.join('assets','graphics','Sky.png')).convert()
+ground_surface = pygame.image.load(os.path.join('assets','graphics','ground.png')).convert()
 ground_rect = ground_surface.get_rect(topleft = (0,sky_surface.get_height()))
 
 # Player
@@ -133,7 +134,7 @@ player.add(Player())
 enemies_group = pygame.sprite.Group()
 
 # Game over player
-player_stand = pygame.image.load('assets/graphics/Player/player_stand.png').convert_alpha()
+player_stand = pygame.image.load(os.path.join('assets','graphics','Player','player_stand.png')).convert_alpha()
 player_stand = pygame.transform.rotozoom(player_stand, 0, 2.5)
 player_stand_rect = player_stand.get_rect(center = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
 
