@@ -1,22 +1,28 @@
 import pygame
 from sys import exit
+import sys
 from random import randint, choice
 import os
+
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(relative)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
-        player_walk1_surface = pygame.image.load('assets/graphics/Player/player_walk_1.png').convert_alpha()
-        player_walk2_surface = pygame.image.load('assets/graphics/Player/player_walk_2.png').convert_alpha()
+        player_walk1_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Player','player_walk_1.png'))).convert_alpha()
+        player_walk2_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Player','player_walk_2.png'))).convert_alpha()
         self.index_surface = 0
         self.player_walk_surfaces = [player_walk1_surface, player_walk2_surface]
-        self.player_jump_surface = pygame.image.load('assets/graphics/Player/jump.png').convert_alpha()
+        self.player_jump_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Player','jump.png'))).convert_alpha()
         self.image = self.player_walk_surfaces[self.index_surface]
         self.rect = self.image.get_rect(midbottom = (80,ground_rect.top))
         self.gravity = 0
         self.y_jump = 20
 
-        self.jump_sound = pygame.mixer.Sound('assets/audio/jump.mp3')
+        self.jump_sound = pygame.mixer.Sound(resource_path(os.path.join('assets','audio','jump.mp3')))
         self.jump_sound.set_volume(0.5)
 
     def player_input(self):
@@ -53,15 +59,15 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, type: str) -> None:
         super().__init__()
         if type == 'fly':
-            fly_frame1_surface = pygame.image.load('assets/graphics/Fly/Fly1.png').convert_alpha()
-            fly_frame2_surface = pygame.image.load('assets/graphics/Fly/Fly2.png').convert_alpha()
+            fly_frame1_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Fly','Fly1.png'))).convert_alpha()
+            fly_frame2_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Fly','Fly2.png'))).convert_alpha()
             self.frames = [fly_frame1_surface, fly_frame2_surface]
             self.x_speed = 8
             self.animation_speed = 0.3
             self.y_pos = ground_rect.top - 90
         else:
-            snail_frame1_surface = pygame.image.load('assets/graphics/snail/snail1.png').convert_alpha()
-            snail_frame2_surface = pygame.image.load('assets/graphics/snail/snail2.png').convert_alpha()
+            snail_frame1_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','snail','snail1.png'))).convert_alpha()
+            snail_frame2_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','snail','snail2.png'))).convert_alpha()
             self.frames = [snail_frame1_surface, snail_frame2_surface]
             self.x_speed = 6
             self.animation_speed = 0.1
@@ -113,16 +119,16 @@ GREEN_SHADOW = (111,196,169)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
-text_font = pygame.font.Font(os.path.join('assets','font','Pixeltype.ttf'), 50)
+text_font = pygame.font.Font(resource_path(os.path.join('assets','font','Pixeltype.ttf')), 50)
 game_active = False
 start_time = 0
 score = 0
-background_music = pygame.mixer.Sound(os.path.join('assets','audio','music.wav'))
+background_music = pygame.mixer.Sound(resource_path(os.path.join('assets','audio','music.wav')))
 background_music.set_volume(0.5)
 background_music.play(loops = -1)
 
-sky_surface = pygame.image.load(os.path.join('assets','graphics','Sky.png')).convert()
-ground_surface = pygame.image.load(os.path.join('assets','graphics','ground.png')).convert()
+sky_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','Sky.png'))).convert()
+ground_surface = pygame.image.load(resource_path(os.path.join('assets','graphics','ground.png'))).convert()
 ground_rect = ground_surface.get_rect(topleft = (0,sky_surface.get_height()))
 
 # Player
@@ -134,7 +140,7 @@ player.add(Player())
 enemies_group = pygame.sprite.Group()
 
 # Game over player
-player_stand = pygame.image.load(os.path.join('assets','graphics','Player','player_stand.png')).convert_alpha()
+player_stand = pygame.image.load(resource_path(os.path.join('assets','graphics','Player','player_stand.png'))).convert_alpha()
 player_stand = pygame.transform.rotozoom(player_stand, 0, 2.5)
 player_stand_rect = player_stand.get_rect(center = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
 
