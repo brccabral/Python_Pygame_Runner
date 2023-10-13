@@ -5,10 +5,11 @@ from random import randint, choice
 import os
 
 
+bundle_dir = getattr(sys, "_MEIPASS", os.path.abspath(os.path.dirname(__file__)))
+
+
 def resource_path(relative):
-    if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, relative)
-    return os.path.join(relative)
+    return os.path.abspath(os.path.join(bundle_dir, relative))
 
 
 class Player(pygame.sprite.Sprite):
@@ -71,9 +72,9 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, type: str) -> None:
+    def __init__(self, e_type: str) -> None:
         super().__init__()
-        if type == "fly":
+        if e_type == "fly":
             fly_frame1_surface = pygame.image.load(
                 resource_path(os.path.join("assets", "graphics", "Fly", "Fly1.png"))
             ).convert_alpha()

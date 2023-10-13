@@ -6,4 +6,4 @@ Tutorial from https://www.youtube.com/watch?v=AY9MnQ4x3zk
   
 pip install pygame  
   
-![Runner screenshot](https://github.com/brccabral/Runner/blob/master/Runner.png)
+![Runner screenshot](Runner.png)
